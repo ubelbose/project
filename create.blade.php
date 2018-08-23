@@ -1,3 +1,10 @@
+{{--
+このコードだけでは動きません
+実際の機能は下のURLでお願いします
+URL : http://52.78.122.145/main/create
+--}}
+
+
 @extends('layouts.master')
 @section('content')
 
@@ -32,7 +39,7 @@
     </style>
 
 
-    <!--악보 테이블-->
+    <!--楽譜テーブル-->
     <div class="menuLogo" align="center">
         <div class="SP-title"> 
             <div></div>
@@ -157,7 +164,7 @@
         </ul>
     </div>
     </div>
-    <!--기능-->
+    <!--機能-->
     <div id="div_musicController" style="padding-top:10px">
         <button class="pointButton btn-play " id="button_play"><img height="23px" style="width:50px;object-fit:contain"></button>
         <input type="text" id="input_musicLength" disabled style="text-align:center"/>
@@ -260,7 +267,7 @@ var recordForRedo = [];
 
 
 
-//초기 동작
+//初期動作
 {
     
     
@@ -275,7 +282,7 @@ var recordForRedo = [];
 }
 
 
-//테이블 제작 및 연장
+//テーブル政策及び追加
 function tableCreate(max) {
     for(var i = 0; i < max; i++){
         createHead();
@@ -286,7 +293,7 @@ function tableCreate(max) {
     }
 }//function-end
 
-//상단 가로줄 넘버링 제작
+//上段横ナンバーリング追加
 function createHead() {
     var thead = document.getElementById('theadOfPianoTable');
 
@@ -301,7 +308,7 @@ function createHead() {
     thead.appendChild(createdTH);
 }
 
-//악보 입력 부분 제작
+//楽譜入力制作
 function createScore(i) {
 
     var tbody = document.getElementById('tbodyOfPianoTable');
@@ -328,14 +335,14 @@ function createScore(i) {
 }
 
 
-//악보 클릭 시 음원 재생, 히스토리 기록.
+//楽譜をクリックした時、音を再生
 $('#tbodyOfPianoTable').on('click','.cell-piano',function () {
 
     
-    //클래스 추가
+    //クラス追加
     this.classList.toggle("cell-piano-input");
 
-    //redo용 변수 초기화
+    //REDO変数
     recordForRedo = [];
 
     if(this.classList.contains("cell-piano-input")){
@@ -363,16 +370,15 @@ $('#tbodyOfPianoTable').on('click','.cell-piano',function () {
 
 
 
-//미리듣기 클릭 이벤트
+//再生機能再生イベント
 $('#div_musicController').on('click','.btn-play',function() {
-        //오디오 초기화
+        //オーディオ初期化
         window.clearInterval(audioHandler);
         
-        //템포 변동(미구현)
-        // tempoArray[0] = createTempoPoint(1,getTempo($('#input_tempo')[0].value));
+
         
         
-        //실행 구간 취득
+        //実行の長さを取得
         var currentLine = parseInt($('#input_startPoint')[0].value);
         var endLine = parseInt(('#input_endPoint')[0].value);
 
@@ -382,10 +388,10 @@ $('#div_musicController').on('click','.btn-play',function() {
         if(!endLine)
             endLine = document.getElementById('theadOfPianoTable').children.length - 1;
 
-        //템포 취득
+        //テンポ取得
         var tempo = getTempo($('#input_tempo')[0].value);
 
-        //악보 취득
+        //楽譜取得
         var stringArray = convertString().split(";")[1].split("r");
         
         audioHandler = setInterval(function () {
@@ -395,14 +401,14 @@ $('#div_musicController').on('click','.btn-play',function() {
 
             }
 
-        //화면 길이 취득
+        //画面の長さを取得
         var screenLine = parseInt(window.screen.width/33);
 
-            //스크롤 이동
+            //スクロール移動
             if(currentLine%screenLine == 0 && currentLine !== 0)
                 screenChaser(screenLine);
             
-            //악보 강조 및 음원 재생
+            //ポーカス及び再生機能
             try {
                 if(stringArray[currentLine] != undefined){
                     focusLine(parseInt(currentLine)+2);
@@ -421,7 +427,7 @@ $('#div_musicController').on('click','.btn-play',function() {
             }
 
 
-            //자동 종료 관련
+            //オートエンド
             if(currentLine + 1 >= endLine){
                 window.clearInterval(audioHandler);
                 
@@ -440,19 +446,19 @@ $('#div_musicController').on('click','.btn-play',function() {
     }
 );
 
-//종료 이벤트
+//終了イベント
 $('#div_musicController').on('click','.btn-stop',function() {
     musicStop();
 });
 
-//악보→오르골 전용 스트링 변환 이벤트
+//楽譜→オルゴールString変換イベント
 $('#button_convert').click(
     function () {
         convertString(1);
     }
 );
 
-//악보 초기화
+//楽譜初期化
 $('#button_clear').click(
     
     function() {
@@ -462,14 +468,14 @@ $('#button_clear').click(
     
 );
 
-//오르골 전용 스트링→악보 변환 이벤트
+//オルゴールString→楽譜変換イベント
 $('#button_read').click(
     function () {
         openScore();
     }
 );
 
-//마우스 인식 악보 강조
+//マウスイベント：楽譜ポーカス
 $('#tbodyOfPianoTable').on("mouseenter",".cell-piano", function() {
     if(audioHandler == undefined)
     crossFocus(event);
@@ -478,7 +484,7 @@ $('#tbodyOfPianoTable').on("mouseenter",".cell-piano", function() {
     removeFocus('crossFocus')
 });
 
-//정지
+//停止
 function musicStop(){
     stop_music();
     buttonChange($('#button_play')[0]);
@@ -488,7 +494,7 @@ function musicStop(){
 }
 
 
-//상단 클릭 시 시작점 변경
+//始まる地点設定
 $('#theadOfPianoTable').on('click','th',function () {
     var clickPoint = event.target.innerHTML;
     if(clickPoint != "항목"){
@@ -496,7 +502,7 @@ $('#theadOfPianoTable').on('click','th',function () {
     }
 });
 
-//상단 더블 클릭 시 종료점 변경(시작점 변경과 연동되어 있음)
+//終了地点設定
 $('#theadOfPianoTable').on('dblclick','th',function () {
     var clickPoint = event.target.innerHTML;
     if(clickPoint != "항목"){
@@ -504,14 +510,14 @@ $('#theadOfPianoTable').on('dblclick','th',function () {
     }
 });
 
-//악보 새로 저장
+//新しく保存
 $('#button_save_new').click(function() {
     sendScore();
     // 0413 민석 추가
     
 })
 
-//악보 덮어쓰기
+//楽譜上書き
 $('#button_save_overwrite').click(function() {
     if(location.href.search('edit') > -1)
         overwriteScore();
@@ -519,26 +525,12 @@ $('#button_save_overwrite').click(function() {
         sendScore();
 })
 
-//악보 제거하기
+//楽譜削除
 $('#button_delete').click(function() {
     deleteScore();
 })
 
-//템포 변동 버튼
-// $('#button_tempo_change').click(function() {
-//     var point = parseInt(prompt("변동할 위치"));
-//     var tempo = parseInt(prompt("템포값"));
-//     var tempoElement = createTempoPoint(point,tempo);
-    
-//     tempoArray[tempoArray.length] = tempoElement;
-    
-    
-// })
 
-//모달 오픈 이벤트
-// $("#tempoModal").on('shown.bs.modal', function () {
-//     console.log('The modal is fully shown.');
-//     });
 
 
 //keydown events
@@ -573,7 +565,7 @@ $('.musicPiano>li').click(function(){
 
 // ------------------------------------------------------------------------------
 
-//세로 줄에서 연주해야되는 음원 리스트 획득
+//再生する音リストを取得
 function getPlaylist(line) {
     var table = document.getElementById('tbodyOfPianoTable');
     var lineArray = new Array();
@@ -586,7 +578,7 @@ function getPlaylist(line) {
     return lineArray;
 }
 
-//음원 재생
+//音を再生
 function audioPlay2(scoreString) {
     var scoreArray = getPlayList2(scoreString);
     var audio = "";
@@ -609,7 +601,7 @@ function audioPlay2(scoreString) {
         return 0;
 }
 
-//음원 재생 목록 작성
+//再生する音源リストを習得
 function getPlayList2(scoreString){
     //"YA"를 받으면 그걸 분해해서 숫자로 바꾼 뒤 배열로 리턴
     
@@ -626,7 +618,7 @@ function getPlayList2(scoreString){
     return scoreArray;
 }
 
-//악보→오르골 전용 스트링
+//楽譜→オルゴールStringコンバート
 function convertString(copyStatus) {
     var maxOfLine = document.getElementById('theadOfPianoTable').children.length - 1;
     var melodyArray = new Array();
@@ -692,7 +684,7 @@ function convertString(copyStatus) {
 
 
 
-//Tempo로 칭해지는 딜레이를 구하는 계산식
+//テンポで曲のスピードを取得
 function getTempo(argTempo) {
     var inputTempo =    argTempo;
 
@@ -707,7 +699,7 @@ function getTempo(argTempo) {
 
 }
 
-//곡 길이 계산
+//音楽の長さ
 function getMusicLength(endLine, tempo){
     var maxOfSecond = endLine * tempo / 1000;
     var h = Math.floor(maxOfSecond / 3600);
@@ -718,7 +710,7 @@ function getMusicLength(endLine, tempo){
     return lengthString;
 }
 
-//악보 초기화
+//楽譜初期化
 function clearScore() {
     
         
@@ -729,7 +721,7 @@ function clearScore() {
     tableCreate(FIRST_NOTES);
 }
 
-//오르골 전용 스트링→악보
+//オルゴールString→楽譜
 function openScore(){
 
     var scoreString;
@@ -783,7 +775,7 @@ function openScore(){
         }
     }
 
-//css를 이용한 미리듣기 현재 진행 척도 강조
+//楽譜ポーカスｂｙCSS
 function focusLine(currentLine) {
     var head = $('#pianoTable')[0].children[0].children[currentLine];
     var body;
@@ -795,20 +787,20 @@ function focusLine(currentLine) {
 
 }
 
-//css를 이용한 현재 진행 척도 강조 해제
+//楽譜ポーカスキャンセル
 function removeFocus(focusName){
 
     $('.'+focusName).removeClass(focusName)
 }
 
-//스크롤 이동
+//スクロール移動
 function screenChaser(line) {
     var cellWidth = document.getElementsByName('80')[0].offsetWidth;
     
     document.getElementById('musicscore').scrollBy(cellWidth*line,0);
 }
 
-//마우스 위치에 따른 악보 강조
+//マウスで楽譜ポーカス
 function crossFocus(event){
     
     var target = event.target;
@@ -957,8 +949,7 @@ function readScoreFromDB(){
 
 }
 
-//수정할 때 수정할 스코어 넘버가 필요해 
-//
+
 function overwriteScore(){
     
         //악보 덮어쓰기 함수
