@@ -828,7 +828,7 @@ function crossFocus(event){
 }
 
 // checkpoint
-//악보 스트링 전송
+//楽譜String転送
 function sendScore(){
     var scoreString = convertString(0);
     var tempo = scoreString.split(";")[0];
@@ -917,7 +917,7 @@ function sendScore(){
     
 }
 
-//DB에서 악보 정보 불러오기
+//楽譜の読み取り
 function readScoreFromDB(){
     
         var temp        = {!!json_encode($post)!!};
@@ -949,7 +949,7 @@ function readScoreFromDB(){
 
 }
 
-
+//楽譜の上書き
 function overwriteScore(){
     
         //악보 덮어쓰기 함수
@@ -1061,7 +1061,7 @@ function deleteScore(){
     }
     
     
-    //하단 피아노 조작
+    //下段ピアノコントロール
     function activePiano(scoreString){
         var scoreArray = getPlayList2(scoreString);
         var audio = "";
@@ -1082,7 +1082,7 @@ function deleteScore(){
             return 0;    
     }
 
-    //악보 입력 순서 기록    
+    //入力記録
     function recordHistory(moveType, argCellIndex, argRowIndex){
         
         //Max : 20 move.
@@ -1092,7 +1092,7 @@ function deleteScore(){
             recordYourMove[recordYourMove.length]={type:moveType,col:argCellIndex,row:argRowIndex};
     }
     
-    //실행 취소
+    //巻き戻し
     function undo(){
        try{
        var order = recordYourMove[recordYourMove.length - 1];
@@ -1109,7 +1109,7 @@ function deleteScore(){
         
     }
     
-    //실행 취소를 실행 취소
+    //巻き戻しの巻き戻し
     function redo(){
         try{
         var reorder = recordForRedo[recordForRedo.length - 1];
